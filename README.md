@@ -1,49 +1,54 @@
-# Hola Mundo DevOps
+# Entrega 3 - DevOps
 
-Proyecto Java ultra simple: solo responde `Hola Mundo`.
+## Proyecto
 
-Usa lo minimo para la evaluacion:
+Este proyecto corresponde a la Entrega 3 del ramo DevOps. Consiste en una aplicacion Java simple que levanta un servidor HTTP y responde `Hola Mundo` en el endpoint principal.
 
-- JUnit para pruebas
-- JaCoCo para cobertura
-- SonarCloud para calidad
-- Docker Compose para desplegar en EC2
-- CloudWatch para monitorear la instancia y logs
-- Sin Kubernetes
+El objetivo es contar con una aplicacion basica que pueda ejecutarse localmente y desplegarse usando contenedores y un flujo de automatizacion.
 
-## Ejecutar
+## Como levantar el proyecto
+
+### Ejecutar con Maven
+
+Requisitos:
+- Java 21
+
+Comandos:
 
 ```bash
 ./mvnw verify
-docker compose up -d --build
+java -jar target/hola-mundo-devops-1.0.0.jar
+```
+
+Probar el servicio:
+
+```bash
 curl http://localhost:8082/
 ```
 
-JaCoCo deja el reporte en:
+### Ejecutar con Docker Compose
 
-```text
-target/site/jacoco/index.html
-target/site/jacoco/jacoco.xml
+Requisitos:
+- Docker
+- Docker Compose
+
+Comando:
+
+```bash
+docker compose up -d --build
 ```
 
-## Pipeline
+Probar el servicio:
 
-El workflow ejecuta pruebas, valida JaCoCo, analiza SonarCloud, construye Docker y despliega en EC2 con runner self-hosted.
-
-Para SonarCloud debes configurar en GitHub:
-
-- Secret `SONAR_TOKEN`
-- Variable `SONAR_ORGANIZATION`
-- Variable `SONAR_PROJECT_KEY`
-
-El runner de EC2 debe tener las etiquetas:
-
-```text
-self-hosted
-ep3
-deploy
+```bash
+curl http://localhost:8082/
 ```
 
-## CloudWatch
+## Entrega 3 del ramo DevOps
 
-En AWS usa CloudWatch para mostrar CPU, memoria, disco, logs del contenedor y alarma. El repositorio no usa Kubernetes.
+Esta entrega presenta una aplicacion Java simple preparada para su construccion, ejecucion y despliegue. El proyecto sirve como base para demostrar el trabajo practico asociado a la tercera entrega del ramo DevOps.
+
+## Integrantes
+
+- Marco Suarez
+- Barbara Tolorza
