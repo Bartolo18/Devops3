@@ -1,0 +1,20 @@
+{
+  "name": "hola-mundo-devops",
+  "version": "1.0.0",
+  "description": "Microservicio minimo Hola Mundo para pruebas de DevOps.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test test/*.test.js",
+    "coverage": "node --test --experimental-test-coverage test/*.test.js",
+    "audit:quality": "sh scripts/audit-quality.sh"
+  },
+  "keywords": [
+    "devops",
+    "hello-world",
+    "docker",
+    "ci-cd"
+  ],
+  "author": "",
+  "license": "MIT"
+}
