@@ -7,13 +7,15 @@ Esta guia esta pensada para grabar el video pedido: push al repositorio, ejecuci
 - No se utiliza Kubernetes.
 - El microservicio se despliega en EC2 con Docker Compose.
 - La observabilidad se realiza con AWS CloudWatch: metricas, logs, dashboard y alarma.
+- Las pruebas y cobertura se ejecutan con JUnit y JaCoCo.
+- El cumplimiento de calidad se valida con SonarCloud y su Quality Gate.
 
 ## 1. Pruebas locales
 
 ```bash
-npm test
-npm run coverage
-npm run audit:quality
+./mvnw test
+./mvnw verify
+./scripts/audit-quality.sh
 docker compose up -d --build
 curl http://localhost:8082/
 curl http://localhost:8082/health
@@ -34,7 +36,34 @@ git push -u origin main
 
 Entrega en AVA la URL del repositorio.
 
-## 3. Runner self-hosted en EC2
+## 3. JaCoCo y SonarCloud
+
+JaCoCo queda configurado en `pom.xml`. Al ejecutar:
+
+```bash
+./mvnw verify
+```
+
+se generan pruebas, cobertura y reporte XML en:
+
+```text
+target/site/jacoco/jacoco.xml
+```
+
+Para SonarCloud, crea el proyecto en SonarCloud y configura en GitHub:
+
+```text
+Secrets:
+SONAR_TOKEN
+
+Variables:
+SONAR_ORGANIZATION
+SONAR_PROJECT_KEY
+```
+
+El pipeline usa `-Dsonar.qualitygate.wait=true`, por lo que si SonarCloud rechaza el Quality Gate, el deploy no continua.
+
+## 4. Runner self-hosted en EC2
 
 En GitHub: `Settings > Actions > Runners > New self-hosted runner`.
 
@@ -48,7 +77,7 @@ deploy
 
 En la instancia EC2 deben estar instalados Docker y Docker Compose. Tambien debes abrir el puerto `8082` en el Security Group. Esta arquitectura reemplaza el uso de Kubernetes por un despliegue simple en EC2, suficiente para mostrar CI/CD, monitoreo y validacion del microservicio.
 
-## 4. Validacion antes y despues del despliegue
+## 5. Validacion antes y despues del despliegue
 
 Antes del push o antes de ejecutar el pipeline:
 
@@ -66,7 +95,7 @@ curl http://IP_PUBLICA_EC2:8082/metrics
 
 En el video muestra que GitHub Actions termina el job `quality` y luego el job `deploy`.
 
-## 5. CloudWatch
+## 6. CloudWatch
 
 Configura CloudWatch Agent usando `infra/cloudwatch-agent-config.json` para enviar la observabilidad requerida:
 
@@ -88,23 +117,23 @@ stress-ng --cpu 2 --timeout 120s
 
 Luego muestra en CloudWatch que la metrica sube y que la alarma cambia de estado.
 
-## 6. Demostrar que el pipeline se detiene
+## 7. Demostrar que el pipeline se detiene
 
-Haz una rama de prueba y agrega temporalmente una linea insegura en `src/server.js`:
+Haz una rama de prueba y agrega temporalmente una linea insegura en `src/main/java/cl/duoc/devops/Application.java`:
 
-```js
-eval('1 + 1');
+```java
+System.exit(1);
 ```
 
-Al subir esa rama o abrir un Pull Request, el paso `Validar cumplimiento` falla por `scripts/audit-quality.sh`. Eso demuestra el IE6: el pipeline se interrumpe ante una falla critica de calidad o seguridad.
+Al subir esa rama o abrir un Pull Request, el paso `Validar cumplimiento local` falla por `scripts/audit-quality.sh`. Tambien puedes bajar cobertura quitando pruebas para que falle JaCoCo o SonarCloud. Eso demuestra el IE6: el pipeline se interrumpe ante una falla critica de calidad o seguridad.
 
 No dejes esa linea en `main`.
 
-## 7. Checklist para el video
+## 8. Checklist para el video
 
 - Mostrar el repositorio en GitHub.
 - Mostrar el push.
-- Mostrar GitHub Actions ejecutando pruebas, cobertura, auditoria y Docker build.
+- Mostrar GitHub Actions ejecutando JUnit, JaCoCo, auditoria, SonarCloud y Docker build.
 - Mostrar deploy en EC2 con Docker Compose y el runner self-hosted.
 - Mostrar `curl` antes y despues del despliegue.
 - Mostrar CloudWatch con metricas, logs y alarma.

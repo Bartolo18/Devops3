@@ -2,7 +2,5 @@
 .github
 docs
 infra
-node_modules
-npm-debug.log
-coverage
+target
 .DS_Store

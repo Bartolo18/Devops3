@@ -1,6 +1,6 @@
-# Hola Mundo DevOps
+# Hola Mundo DevOps Java
 
-Microservicio minimo para demostrar CI/CD, despliegue en EC2 con Docker Compose, observabilidad con AWS CloudWatch y validaciones de calidad.
+Microservicio Java minimo para demostrar CI/CD, pruebas JUnit, cobertura JaCoCo, analisis SonarCloud, despliegue en EC2 con Docker Compose y observabilidad con AWS CloudWatch.
 
 ## Alcance
 
@@ -16,10 +16,10 @@ Este proyecto evita Kubernetes. El despliegue se realiza en una instancia EC2 me
 ## Ejecutar localmente
 
 ```bash
-npm test
-npm run coverage
-npm run audit:quality
-npm start
+./mvnw test
+./mvnw verify
+./scripts/audit-quality.sh
+PORT=8082 java -jar target/hola-mundo-devops-1.0.0.jar
 ```
 
 Luego prueba:
@@ -44,15 +44,22 @@ docker compose logs -f
 El workflow `.github/workflows/ci-cd.yml` ejecuta:
 
 1. Pruebas automatizadas.
-2. Cobertura con el test runner de Node.js.
-3. Auditoria de calidad y cumplimiento.
-4. Build de imagen Docker.
-5. Deploy en EC2 usando un runner self-hosted con etiquetas `self-hosted`, `ep3` y `deploy`.
+2. Cobertura JaCoCo y validacion de cobertura minima.
+3. Auditoria de calidad y cumplimiento local.
+4. Analisis SonarCloud con Quality Gate.
+5. Build de imagen Docker.
+6. Deploy en EC2 usando un runner self-hosted con etiquetas `self-hosted`, `ep3` y `deploy`.
 
-Si una prueba o auditoria falla, el deploy no se ejecuta.
+Si una prueba, JaCoCo, la auditoria o el Quality Gate de SonarCloud fallan, el deploy no se ejecuta.
+
+Para SonarCloud debes configurar en GitHub:
+
+- Secret `SONAR_TOKEN`
+- Variable `SONAR_ORGANIZATION`
+- Variable `SONAR_PROJECT_KEY`
 
 ## Observabilidad
 
-El servicio imprime logs JSON por stdout y expone `/metrics` para validaciones simples. En EC2, la observabilidad principal se realiza con CloudWatch: puedes enviar logs y metricas de infraestructura usando `infra/cloudwatch-agent-config.json` y crear un dashboard base con `infra/cloudwatch-dashboard-template.json`.
+El servicio imprime logs JSON por stdout y expone `/metrics` para validaciones simples. En EC2, la observabilidad principal se realiza con CloudWatch: puedes enviar logs del contenedor y metricas de infraestructura usando `infra/cloudwatch-agent-config.json` y crear un dashboard base con `infra/cloudwatch-dashboard-template.json`.
 
 La guia de entrega esta en `docs/GUIA_ENTREGA.md`.
