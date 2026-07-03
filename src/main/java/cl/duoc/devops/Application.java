@@ -14,10 +14,13 @@ public final class Application {
   }
 
   public static void main(String[] args) throws IOException {
-    int port = Integer.parseInt(System.getenv().getOrDefault("PORT", "8082"));
-    HttpServer server = createServer(new InetSocketAddress("0.0.0.0", port));
+    start("0.0.0.0", Integer.parseInt(System.getenv().getOrDefault("PORT", "8082")));
+  }
+
+  static HttpServer start(String host, int port) throws IOException {
+    HttpServer server = createServer(new InetSocketAddress(host, port));
     server.start();
-    System.out.println("Hola Mundo escuchando en puerto " + port);
+    return server;
   }
 
   static HttpServer createServer(InetSocketAddress address) throws IOException {
@@ -27,7 +30,6 @@ public final class Application {
   }
 
   private static void handle(HttpExchange exchange) throws IOException {
-    System.out.println(exchange.getRequestMethod() + " " + exchange.getRequestURI().getPath());
     byte[] bytes = RESPONSE.getBytes(StandardCharsets.UTF_8);
 
     exchange.getResponseHeaders().set("Content-Type", "text/plain; charset=utf-8");

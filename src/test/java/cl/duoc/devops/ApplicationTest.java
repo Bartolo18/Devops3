@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -37,8 +36,7 @@ class ApplicationTest {
     }
 
     static RunningServer start() throws IOException {
-      HttpServer server = Application.createServer(new InetSocketAddress("127.0.0.1", 0));
-      server.start();
+      HttpServer server = Application.start("127.0.0.1", 0);
       return new RunningServer(server);
     }
 
