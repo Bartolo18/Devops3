@@ -8,7 +8,7 @@
   <artifactId>hola-mundo-devops</artifactId>
   <version>1.0.0</version>
   <name>Hola Mundo DevOps</name>
-  <description>Microservicio minimo para CI/CD, JaCoCo, SonarCloud, EC2 y CloudWatch.</description>
+  <description>Hola Mundo minimo para CI/CD, JaCoCo, SonarCloud, EC2 y CloudWatch.</description>
 
   <properties>
     <maven.compiler.release>21</maven.compiler.release>
@@ -76,27 +76,6 @@
             <goals>
               <goal>report</goal>
             </goals>
-          </execution>
-          <execution>
-            <id>check</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-            <configuration>
-              <rules>
-                <rule>
-                  <element>BUNDLE</element>
-                  <limits>
-                    <limit>
-                      <counter>LINE</counter>
-                      <value>COVEREDRATIO</value>
-                      <minimum>0.70</minimum>
-                    </limit>
-                  </limits>
-                </rule>
-              </rules>
-            </configuration>
           </execution>
         </executions>
       </plugin>

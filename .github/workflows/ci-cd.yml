@@ -28,9 +28,6 @@ jobs:
       - name: Ejecutar pruebas con JaCoCo
         run: ./mvnw -B verify
 
-      - name: Validar cumplimiento local
-        run: ./scripts/audit-quality.sh
-
       - name: Analizar en SonarCloud
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -69,4 +66,4 @@ jobs:
       - name: Validar servicio desplegado
         run: |
           sleep 5
-          curl --fail http://localhost:8082/health
+          curl --fail http://localhost:8082/

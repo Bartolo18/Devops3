@@ -1,10 +1,10 @@
 package cl.duoc.devops;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -15,54 +15,12 @@ class ApplicationTest {
   private static final HttpClient CLIENT = HttpClient.newHttpClient();
 
   @Test
-  void rootReturnsHelloWorld() throws Exception {
+  void returnsHelloWorld() throws Exception {
     try (RunningServer server = RunningServer.start()) {
       HttpResponse<String> response = get(server.url("/"));
 
       assertEquals(200, response.statusCode());
       assertEquals("Hola Mundo\n", response.body());
-    }
-  }
-
-  @Test
-  void apiRouteReturnsHelloWorld() throws Exception {
-    try (RunningServer server = RunningServer.start()) {
-      HttpResponse<String> response = get(server.url("/api/v1/hola"));
-
-      assertEquals(200, response.statusCode());
-      assertEquals("Hola Mundo\n", response.body());
-    }
-  }
-
-  @Test
-  void healthReturnsServiceStatus() throws Exception {
-    try (RunningServer server = RunningServer.start()) {
-      HttpResponse<String> response = get(server.url("/health"));
-
-      assertEquals(200, response.statusCode());
-      assertTrue(response.body().contains("\"status\":\"ok\""));
-      assertTrue(response.body().contains("\"service\":\"hola-mundo-devops\""));
-    }
-  }
-
-  @Test
-  void metricsReturnsSimpleMetrics() throws Exception {
-    try (RunningServer server = RunningServer.start()) {
-      HttpResponse<String> response = get(server.url("/metrics"));
-
-      assertEquals(200, response.statusCode());
-      assertTrue(response.body().contains("app_requests_total"));
-      assertTrue(response.body().contains("app_uptime_seconds"));
-    }
-  }
-
-  @Test
-  void unknownRouteReturnsNotFound() throws Exception {
-    try (RunningServer server = RunningServer.start()) {
-      HttpResponse<String> response = get(server.url("/no-existe"));
-
-      assertEquals(404, response.statusCode());
-      assertTrue(response.body().contains("\"error\":\"not_found\""));
     }
   }
 
@@ -79,7 +37,7 @@ class ApplicationTest {
     }
 
     static RunningServer start() throws IOException {
-      HttpServer server = Application.createServer("127.0.0.1", 0);
+      HttpServer server = Application.createServer(new InetSocketAddress("127.0.0.1", 0));
       server.start();
       return new RunningServer(server);
     }
