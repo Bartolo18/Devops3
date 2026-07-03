@@ -19,9 +19,16 @@ docker compose up -d --build
 curl http://localhost:8082/
 ```
 
+JaCoCo deja el reporte en:
+
+```text
+target/site/jacoco/index.html
+target/site/jacoco/jacoco.xml
+```
+
 ## Pipeline
 
-El workflow ejecuta pruebas, genera reporte JaCoCo, analiza SonarCloud, construye Docker y despliega en EC2 con runner self-hosted.
+El workflow ejecuta pruebas, valida JaCoCo, analiza SonarCloud, construye Docker y despliega en EC2 con runner self-hosted.
 
 Para SonarCloud debes configurar en GitHub:
 
