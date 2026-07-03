@@ -1,6 +1,12 @@
 # Guia rapida para la Evaluacion 3
 
-Esta guia esta pensada para grabar el video pedido: push al repositorio, ejecucion del pipeline, despliegue automatico en AWS EC2 y validacion antes/despues.
+Esta guia esta pensada para grabar el video pedido: push al repositorio, ejecucion del pipeline, despliegue automatico en AWS EC2, observabilidad con CloudWatch y validacion antes/despues.
+
+## Alcance definido
+
+- No se utiliza Kubernetes.
+- El microservicio se despliega en EC2 con Docker Compose.
+- La observabilidad se realiza con AWS CloudWatch: metricas, logs, dashboard y alarma.
 
 ## 1. Pruebas locales
 
@@ -40,7 +46,7 @@ ep3
 deploy
 ```
 
-En la instancia EC2 deben estar instalados Docker y Docker Compose. Tambien debes abrir el puerto `8082` en el Security Group.
+En la instancia EC2 deben estar instalados Docker y Docker Compose. Tambien debes abrir el puerto `8082` en el Security Group. Esta arquitectura reemplaza el uso de Kubernetes por un despliegue simple en EC2, suficiente para mostrar CI/CD, monitoreo y validacion del microservicio.
 
 ## 4. Validacion antes y despues del despliegue
 
@@ -62,7 +68,7 @@ En el video muestra que GitHub Actions termina el job `quality` y luego el job `
 
 ## 5. CloudWatch
 
-Configura CloudWatch Agent usando `infra/cloudwatch-agent-config.json` para enviar:
+Configura CloudWatch Agent usando `infra/cloudwatch-agent-config.json` para enviar la observabilidad requerida:
 
 - CPU, memoria y disco de la instancia.
 - Logs JSON generados por el contenedor Docker.
@@ -99,7 +105,7 @@ No dejes esa linea en `main`.
 - Mostrar el repositorio en GitHub.
 - Mostrar el push.
 - Mostrar GitHub Actions ejecutando pruebas, cobertura, auditoria y Docker build.
-- Mostrar deploy en EC2 con el runner self-hosted.
+- Mostrar deploy en EC2 con Docker Compose y el runner self-hosted.
 - Mostrar `curl` antes y despues del despliegue.
 - Mostrar CloudWatch con metricas, logs y alarma.
 - Mostrar una falla controlada que detiene el pipeline.

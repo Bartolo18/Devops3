@@ -1,13 +1,17 @@
 # Hola Mundo DevOps
 
-Microservicio minimo para demostrar CI/CD, despliegue en EC2 con Docker Compose, logs, metricas y validaciones de calidad.
+Microservicio minimo para demostrar CI/CD, despliegue en EC2 con Docker Compose, observabilidad con AWS CloudWatch y validaciones de calidad.
+
+## Alcance
+
+Este proyecto evita Kubernetes. El despliegue se realiza en una instancia EC2 mediante Docker Compose y la observabilidad se realiza con AWS CloudWatch.
 
 ## Endpoints
 
 - `GET /`: responde `Hola Mundo`
 - `GET /api/v1/hola`: responde `Hola Mundo`
 - `GET /health`: estado del servicio
-- `GET /metrics`: metricas simples en formato compatible con Prometheus
+- `GET /metrics`: metricas simples para validacion manual del microservicio
 
 ## Ejecutar localmente
 
@@ -49,6 +53,6 @@ Si una prueba o auditoria falla, el deploy no se ejecuta.
 
 ## Observabilidad
 
-El servicio imprime logs JSON por stdout y expone `/metrics`. En EC2 puedes enviar logs y metricas a CloudWatch usando `infra/cloudwatch-agent-config.json` y crear un dashboard base con `infra/cloudwatch-dashboard-template.json`.
+El servicio imprime logs JSON por stdout y expone `/metrics` para validaciones simples. En EC2, la observabilidad principal se realiza con CloudWatch: puedes enviar logs y metricas de infraestructura usando `infra/cloudwatch-agent-config.json` y crear un dashboard base con `infra/cloudwatch-dashboard-template.json`.
 
 La guia de entrega esta en `docs/GUIA_ENTREGA.md`.
